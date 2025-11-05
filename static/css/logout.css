@@ -1,0 +1,6 @@
+.logout-card { max-width: 520px; margin: 36px auto; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+.logout-card .sub { color: var(--muted); margin: 6px 0 18px 0; }
+.row { display: flex; gap: 12px; }
+.btn-secondary { background: #1f2a3a; color: var(--text) !important; }
+.btn-secondary:hover { background: #263245; }
+

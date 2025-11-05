@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MMI Learning Platform</title>
+    <style>
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; }
+        header { padding: 16px 24px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        main { padding: 24px; max-width: 980px; margin: 0 auto; }
+        .btn { display: inline-block; padding: 10px 16px; background: #0b5fff; color: #fff; text-decoration: none; border-radius: 8px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+        .card { border: 1px solid #eee; border-radius: 12px; padding: 16px; }
+        .sr-only { position: absolute; left: -10000px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>MMI</h1>
+    <nav>
+        <a class="btn" href="/admin/">Admin</a>
+    </nav>
+    <span class="sr-only" role="status" aria-live="polite">Welcome to MMI</span>
+    </header>
+<main>
+    <h2>Welcome</h2>
+    <p>Explore courses via API at <code>/api/courses/</code>. Obtain JWT at <code>/api/auth/token/</code>.</p>
+    <section aria-labelledby="courses-heading">
+        <h3 id="courses-heading">Featured Courses</h3>
+        <div class="grid" role="list">
+            <div class="card" role="listitem">
+                <strong>Sample Course</strong>
+                <p>Replace with real data via the admin or API.</p>
+                <a class="btn" href="/api/courses/">Browse API</a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+<script>
+// basic focus outline preference for accessibility
+try { document.body.addEventListener('keydown', e => { if (e.key === 'Tab') document.body.classList.add('show-focus'); }, { once: true }); } catch (e) {}
+</script>
+</html>
+
+

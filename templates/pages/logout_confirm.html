@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Logout{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/logout.css" />
+{% endblock %}
+{% block content %}
+<div class="logout-card">
+  <h1>Sign out?</h1>
+  <p class="sub">You will be signed out of your MMI account.</p>
+  <div class="row">
+    <form method="post" action="/auth/logout/perform/">{% csrf_token %}<button class="btn" type="submit">Confirm logout</button></form>
+    <a class="btn btn-secondary" href="/dashboard/">Cancel</a>
+  </div>
+</div>
+{% endblock %}
+

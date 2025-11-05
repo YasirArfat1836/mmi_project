@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Dashboard{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/dashboard.css" />
+{% endblock %}
+{% block content %}
+<h1>Your Dashboard</h1>
+
+<div style="margin-bottom:12px; display:flex; gap:12px;">
+  <a class="btn" href="/courses/">Browse Courses</a>
+  <a class="btn" href="/bookings/">Browse Sessions</a>
+  <a class="btn" href="/profile/">Edit Profile</a>
+ </div>
+
+<section>
+  <h2>Enrollments</h2>
+  <div class="grid" role="list">
+    {% for e in enrollments %}
+    <article class="card" role="listitem">
+      <h3><a href="/courses/{{ e.course.slug }}/">{{ e.course.title }}</a></h3>
+      <p>Tutor: {{ e.course.tutor.user.get_full_name|default:e.course.tutor.user.username }}</p>
+      {% if e.id in paid_enrollment_ids %}
+        <span class="price">Paid</span>
+      {% else %}
+        <form method="post" action="/pay/{{ e.id }}/">{% csrf_token %}
+          <button class="btn" type="submit">Pay ${% widthratio e.course.price_cents 100 1 %}</button>
+          <small style="margin-left:8px; color: var(--muted);">Stripe integration coming soon</small>
+        </form>
+      {% endif %}
+    </article>
+    {% empty %}
+    <p>You have no enrollments yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section>
+  <h2>Bookings</h2>
+  <ul class="list">
+    {% for b in bookings %}
+    <li>
+      {{ b.session.course.title }} · {{ b.session.start_time }} – {{ b.session.end_time }}
+      <form style="display:inline" method="post" action="/cancel-booking/{{ b.id }}/">{% csrf_token %}<button class="btn" type="submit">Cancel</button></form>
+    </li>
+    {% empty %}
+    <li>No bookings yet.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}
+

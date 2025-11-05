@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Profile{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/profile.css" />
+{% endblock %}
+{% block content %}
+<div class="profile-card">
+  <h1>Your profile</h1>
+  <div class="profile-header">
+    <div class="avatar">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Profile picture" />
+      {% else %}
+        <div class="avatar-placeholder">{{ request.user.first_name|default:request.user.username|first|upper }}</div>
+      {% endif %}
+    </div>
+    <div>
+      <div><strong>{{ request.user.get_full_name|default:request.user.username }}</strong></div>
+      <div class="muted">{{ request.user.email }}</div>
+    </div>
+  </div>
+
+  <form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h3>Account</h3>
+    <div class="grid-2">
+      <div class="field">{{ user_form.first_name.label_tag }}{{ user_form.first_name }}</div>
+      <div class="field">{{ user_form.last_name.label_tag }}{{ user_form.last_name }}</div>
+    </div>
+    <div class="field">{{ user_form.email.label_tag }}{{ user_form.email }}</div>
+
+    <h3>Profile</h3>
+    <div class="field">{{ details_form.avatar.label_tag }}{{ details_form.avatar }}</div>
+    <div class="field">{{ details_form.phone.label_tag }}{{ details_form.phone }}</div>
+    <div class="field">{{ details_form.bio.label_tag }}{{ details_form.bio }}</div>
+
+    <button class="btn" type="submit">Save changes</button>
+  </form>
+</div>
+{% endblock %}
+

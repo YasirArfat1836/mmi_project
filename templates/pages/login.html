@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Sign In{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/auth.css" />
+{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>Welcome back</h1>
+  <p class="sub">Sign in to continue</p>
+  <div class="row" style="margin-bottom:12px; gap:12px;">
+    <a class="btn" href="/auth/login/">Login as user</a>
+    <a class="btn btn-secondary" href="/admin/login/?next=/admin/">Login as admin</a>
+  </div>
+  <form method="post" action="">
+    {% csrf_token %}
+    <div class="field">{{ form.username.label_tag }}{{ form.username }}</div>
+    <div class="field">{{ form.password.label_tag }}{{ form.password }}</div>
+    <button class="btn" type="submit">Sign In</button>
+  </form>
+  <p class="switch">New here? <a href="/auth/register/">Create an account</a></p>
+</div>
+{% endblock %}
+

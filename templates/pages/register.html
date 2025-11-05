@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Register{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/auth.css" />
+{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <h1>Create your account</h1>
+  <p class="sub">It only takes a minute</p>
+  <form method="post" action="">
+    {% csrf_token %}
+    <div class="grid-2">
+      <div class="field">{{ form.first_name.label_tag }}{{ form.first_name }}</div>
+      <div class="field">{{ form.last_name.label_tag }}{{ form.last_name }}</div>
+    </div>
+    <div class="field">{{ form.username.label_tag }}{{ form.username }}</div>
+    <div class="field">{{ form.email.label_tag }}{{ form.email }}</div>
+    <div class="grid-2">
+      <div class="field">{{ form.password.label_tag }}{{ form.password }}</div>
+      <div class="field">{{ form.confirm_password.label_tag }}{{ form.confirm_password }}</div>
+    </div>
+    <button class="btn" type="submit">Register</button>
+  </form>
+  <p class="switch">Already have an account? <a href="/auth/login/">Sign in</a></p>
+</div>
+{% endblock %}
+

@@ -1,0 +1,12 @@
+.auth-card { max-width: 520px; margin: 36px auto; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+.auth-card h1 { margin: 0 0 6px 0; }
+.auth-card .sub { color: var(--muted); margin: 0 0 18px 0; }
+.field { margin-bottom: 14px; display: flex; flex-direction: column; }
+.field label { margin-bottom: 6px; color: var(--muted); }
+.field input { background: #0b1220; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; color: var(--text); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.switch { margin-top: 14px; color: var(--muted); }
+.switch a { color: var(--text); }
+.btn-secondary { background: #1f2a3a; color: var(--text) !important; }
+.btn-secondary:hover { background: #263245; }
+

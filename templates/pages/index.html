@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Home{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/index.css" />
+{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Master new skills with expert tutors</h1>
+    <p>Enroll, book sessions, and access resources in one place.</p>
+    <div class="cta-row">
+        <a class="btn" href="/courses/">Browse Courses</a>
+    </div>
+</section>
+
+<section aria-labelledby="featured-heading" class="featured">
+    <h2 id="featured-heading">Featured Courses</h2>
+    <div class="grid" role="list">
+        {% for c in courses %}
+        <article class="card" role="listitem">
+            <h3><a href="/courses/{{ c.slug }}/">{{ c.title }}</a></h3>
+            <p>{{ c.description|truncatechars:120 }}</p>
+            <div class="meta">
+                <span>By {{ c.tutor.user.get_full_name|default:c.tutor.user.username }}</span>
+                <span class="price">${{ c.price_cents|floatformat:-2 }}</span>
+            </div>
+        </article>
+        {% empty %}
+        <p>No courses yet. Add some via Admin.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+

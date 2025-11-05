@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Courses{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/courses.css" />
+{% endblock %}
+{% block content %}
+<h1>Courses</h1>
+<div class="grid" role="list">
+    {% for c in courses %}
+    <article class="card" role="listitem">
+        <h3><a href="/courses/{{ c.slug }}/">{{ c.title }}</a></h3>
+        <p>{{ c.description|truncatechars:160 }}</p>
+        <div class="meta">
+            <span>By {{ c.tutor.user.get_full_name|default:c.tutor.user.username }}</span>
+            <span class="price">${{ c.price_cents|floatformat:-2 }}</span>
+        </div>
+    </article>
+    {% empty %}
+    <p>No courses found.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
+

@@ -1,0 +1,8 @@
+.hero { padding: 48px 0; text-align: center; }
+.hero h1 { font-size: 2.4rem; margin-bottom: 8px; }
+.hero p { color: var(--muted); margin-bottom: 16px; }
+.cta-row { margin-top: 12px; }
+
+.featured { margin-top: 24px; }
+.featured .card p { color: var(--muted); }
+

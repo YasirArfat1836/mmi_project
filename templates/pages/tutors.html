@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Tutors{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/tutors.css" />
+{% endblock %}
+{% block content %}
+<h1>Tutors</h1>
+<div class="grid" role="list">
+    {% for t in tutors %}
+    <article class="card" role="listitem">
+        <h3>{{ t.user.get_full_name|default:t.user.username }}</h3>
+        <p>{{ t.bio|default:'No bio yet.' }}</p>
+    </article>
+    {% empty %}
+    <p>No tutors yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+

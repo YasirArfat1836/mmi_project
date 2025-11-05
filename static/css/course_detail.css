@@ -1,0 +1,5 @@
+.course-detail header { margin-bottom: 8px; }
+.course-detail .meta { display: flex; gap: 16px; color: var(--muted); }
+.sessions, .resources { padding-left: 18px; }
+.sessions li, .resources li { margin: 6px 0; }
+

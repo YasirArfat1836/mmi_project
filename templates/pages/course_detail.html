@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}MMI · {{ course.title }}{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/course_detail.css" />
+{% endblock %}
+{% block content %}
+<article class="course-detail">
+    <header>
+        <h1>{{ course.title }}</h1>
+        <div class="meta">
+            <span>By {{ course.tutor.user.get_full_name|default:course.tutor.user.username }}</span>
+            <span class="price">${{ course.price_cents|floatformat:-2 }}</span>
+        </div>
+    </header>
+    <p>{{ course.description }}</p>
+
+    <section aria-labelledby="sessions-heading">
+        <h2 id="sessions-heading">Upcoming Sessions</h2>
+        <ul class="sessions">
+            {% for s in sessions %}
+            <li>
+              {{ s.start_time }} – {{ s.end_time }} · Capacity {{ s.capacity }}
+              {% if user.is_authenticated %}
+                <form style="display:inline" method="post" action="/book/{{ s.id }}/">{% csrf_token %}<button class="btn" type="submit">Book</button></form>
+              {% else %}
+                <a class="btn" href="/auth/login/">Sign in to book</a>
+              {% endif %}
+            </li>
+            {% empty %}
+            <li>No sessions scheduled.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section aria-labelledby="resources-heading">
+        <h2 id="resources-heading">Resources</h2>
+        <ul class="resources">
+            {% for r in resources %}
+            <li>
+                {% if r.file %}<a href="{{ r.file.url }}">{{ r.title }}</a>{% elif r.url %}<a href="{{ r.url }}" target="_blank" rel="noopener">{{ r.title }}</a>{% else %}{{ r.title }}{% endif %}
+            </li>
+            {% empty %}
+            <li>None yet.</li>
+            {% endfor %}
+        </ul>
+    </section>
+</article>
+<section>
+  {% if user.is_authenticated %}
+    <form method="post" action="/enroll/{{ course.slug }}/">{% csrf_token %}<button class="btn" type="submit">Enroll</button></form>
+  {% else %}
+    <a class="btn" href="/auth/login/">Sign in to enroll</a>
+  {% endif %}
+</section>
+{% endblock %}
+

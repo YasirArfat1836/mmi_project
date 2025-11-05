@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}MMI · Admin Dashboard{% endblock %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<div class="grid" role="list" style="margin-bottom:16px;">
+  <div class="card" role="listitem"><strong>Users</strong><div>{{ metrics.users }}</div></div>
+  <div class="card" role="listitem"><strong>Tutors</strong><div>{{ metrics.tutors }}</div></div>
+  <div class="card" role="listitem"><strong>Courses</strong><div>{{ metrics.courses }}</div></div>
+  <div class="card" role="listitem"><strong>Sessions</strong><div>{{ metrics.sessions }}</div></div>
+  <div class="card" role="listitem"><strong>Enrollments</strong><div>{{ metrics.enrollments }}</div></div>
+  <div class="card" role="listitem"><strong>Bookings</strong><div>{{ metrics.bookings }}</div></div>
+  <div class="card" role="listitem"><strong>Payments</strong><div>{{ metrics.payments }}</div></div>
+ </div>
+<h2>Manage</h2>
+<ul class="list">
+  {% for label, url in admin_links %}
+    <li><a href="{{ url }}">{{ label }}</a></li>
+  {% endfor %}
+ </ul>
+{% endblock %}
+
