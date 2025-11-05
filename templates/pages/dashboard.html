@@ -40,10 +40,38 @@
     {% for b in bookings %}
     <li>
       {{ b.session.course.title }} · {{ b.session.start_time }} – {{ b.session.end_time }}
-      <form style="display:inline" method="post" action="/cancel-booking/{{ b.id }}/">{% csrf_token %}<button class="btn" type="submit">Cancel</button></form>
+      {% if b.request_status == 'pending' %}
+        <span style="margin-left:8px; color:#fbbf24">Cancellation requested</span>
+      {% elif b.request_status == 'approved' %}
+        <span style="margin-left:8px; color:#22c55e">Cancellation approved</span>
+      {% else %}
+        <form style="display:inline" method="post" action="/cancel-booking/{{ b.id }}/">{% csrf_token %}<button class="btn" type="submit">Request cancel</button></form>
+      {% endif %}
     </li>
     {% empty %}
     <li>No bookings yet.</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section>
+  <h2>Requests</h2>
+  <ul class="list">
+    {% for r in requests_all %}
+      <li>
+        {{ r.get_request_type_display }} ·
+        {% if r.booking %}{{ r.booking.session.course.title }} ({{ r.booking.session.start_time }}){% endif %}
+        —
+        {% if r.status == 'pending' %}
+          <span style="color:#fbbf24">Pending</span>
+        {% elif r.status == 'approved' %}
+          <span style="color:#22c55e">Approved</span>
+        {% else %}
+          <span style="color:#f87171">Rejected</span>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>No requests yet.</li>
     {% endfor %}
   </ul>
 </section>

@@ -15,16 +15,21 @@
     <div class="container header-inner">
         <a class="brand" href="/">MMI</a>
         <nav class="nav">
-            <a href="/courses/">Courses</a>
-            <a href="/tutors/">Tutors</a>
-            {% if user.is_authenticated %}
-                <a href="/dashboard/">Dashboard</a>
-                {% if user.is_staff %}<a href="/admin-dashboard/">Admin</a>{% endif %}
-                <a href="/profile/">Profile</a>
+            {% if user.is_authenticated and user.is_staff %}
+                <a href="/admin-dashboard/">Admin</a>
+                <a href="/admin/">Django Admin</a>
                 <a href="/auth/logout/confirm/">Logout</a>
             {% else %}
-                <a href="/auth/login/">Login</a>
-                <a href="/auth/register/">Register</a>
+                <a href="/courses/">Courses</a>
+                <a href="/tutors/">Tutors</a>
+                {% if user.is_authenticated %}
+                    <a href="/dashboard/">Dashboard</a>
+                    <a href="/profile/">Profile</a>
+                    <a href="/auth/logout/confirm/">Logout</a>
+                {% else %}
+                    <a href="/auth/login/">Login</a>
+                    <a href="/auth/register/">Register</a>
+                {% endif %}
             {% endif %}
         </nav>
     </div>

@@ -109,4 +109,33 @@ class SiteSetting(models.Model):
         return f"Settings({self.name})"
 
 
+class ActionRequest(models.Model):
+    REQUEST_CANCEL_BOOKING = 'cancel_booking'
+    REQUEST_TYPES = [
+        (REQUEST_CANCEL_BOOKING, 'Cancel booking'),
+    ]
+    STATUS_PENDING = 'pending'
+    STATUS_APPROVED = 'approved'
+    STATUS_REJECTED = 'rejected'
+    STATUS_CHOICES = [
+        (STATUS_PENDING, 'Pending'),
+        (STATUS_APPROVED, 'Approved'),
+        (STATUS_REJECTED, 'Rejected'),
+    ]
+
+    request_type = models.CharField(max_length=64, choices=REQUEST_TYPES)
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True, related_name='action_requests')
+    requested_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='action_requests')
+    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='action_reviews')
+    review_comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['status', 'request_type']),
+        ]
+
+
 # Create your models here.

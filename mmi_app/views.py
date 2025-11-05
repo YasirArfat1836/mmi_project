@@ -9,7 +9,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
-from .models import Course, Enrollment, Session, Booking, Resource, Tutor, Payment
+from .models import Course, Enrollment, Session, Booking, Resource, Tutor, Payment, ActionRequest
 from .serializers import (
     CourseSerializer,
     EnrollmentSerializer,
@@ -124,9 +124,17 @@ def dashboard_page(request):
     if not request.user.is_authenticated:
         return render(request, 'pages/dashboard_anon.html', status=401)
     enrollments = Enrollment.objects.filter(student=request.user).select_related('course__tutor__user')
-    bookings = Booking.objects.filter(student=request.user).select_related('session__course')
+    bookings = list(Booking.objects.filter(student=request.user).select_related('session__course'))
     paid_enrollment_ids = set(Payment.objects.filter(enrollment__student=request.user, status='paid').values_list('enrollment_id', flat=True))
-    return render(request, 'pages/dashboard.html', { 'enrollments': enrollments, 'bookings': bookings, 'paid_enrollment_ids': paid_enrollment_ids })
+    # Build map: booking_id -> latest status
+    booking_status_map = {}
+    for ar in ActionRequest.objects.filter(requested_by=request.user, booking__in=bookings).order_by('created_at'):
+        booking_status_map[ar.booking_id] = ar.status
+    # attach status to each booking for easy template rendering
+    for b in bookings:
+        setattr(b, 'request_status', booking_status_map.get(b.id))
+    requests_all = ActionRequest.objects.filter(requested_by=request.user).select_related('booking__session__course').order_by('-created_at')[:25]
+    return render(request, 'pages/dashboard.html', { 'enrollments': enrollments, 'bookings': bookings, 'paid_enrollment_ids': paid_enrollment_ids, 'requests_all': requests_all })
 
 
 def bookings_page(request):
@@ -239,8 +247,14 @@ def pay_enrollment_action(request, enrollment_id: int):
 @require_POST
 def cancel_booking_action(request, booking_id: int):
     booking = get_object_or_404(Booking, id=booking_id, student=request.user)
-    booking.delete()
-    messages.info(request, 'Booking cancelled.')
+    # Create approval request instead of immediate cancel
+    ActionRequest.objects.get_or_create(
+        request_type=ActionRequest.REQUEST_CANCEL_BOOKING,
+        booking=booking,
+        requested_by=request.user,
+        defaults={}
+    )
+    messages.info(request, 'Cancellation request submitted. Awaiting admin approval.')
     return redirect('dashboard')
 
 
@@ -291,7 +305,21 @@ def admin_dashboard_page(request):
         ('Payments', '/admin/mmi_app/payment/'),
         ('Site settings', '/admin/mmi_app/sitesetting/'),
     ]
-    return render(request, 'pages/admin_dashboard.html', { 'metrics': metrics, 'admin_links': admin_links })
+    # Admin-only datasets
+    pending_requests = ActionRequest.objects.filter(status=ActionRequest.STATUS_PENDING).select_related('booking__session__course', 'requested_by').order_by('-created_at')[:10]
+    recent_enrollments = Enrollment.objects.select_related('student', 'course').order_by('-created_at')[:10]
+    recent_bookings = Booking.objects.select_related('student', 'session__course').order_by('-created_at')[:10]
+    recent_payments = Payment.objects.select_related('enrollment__student', 'enrollment__course').order_by('-created_at')[:10]
+
+    context = {
+        'metrics': metrics,
+        'admin_links': admin_links,
+        'pending_requests': pending_requests,
+        'recent_enrollments': recent_enrollments,
+        'recent_bookings': recent_bookings,
+        'recent_payments': recent_payments,
+    }
+    return render(request, 'pages/admin_dashboard.html', context)
 
 
 @login_required

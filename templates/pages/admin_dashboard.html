@@ -1,21 +1,81 @@
 {% extends 'base.html' %}
 {% block title %}MMI · Admin Dashboard{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/admin.css" />
+{% endblock %}
 {% block content %}
 <h1>Admin Dashboard</h1>
-<div class="grid" role="list" style="margin-bottom:16px;">
-  <div class="card" role="listitem"><strong>Users</strong><div>{{ metrics.users }}</div></div>
-  <div class="card" role="listitem"><strong>Tutors</strong><div>{{ metrics.tutors }}</div></div>
-  <div class="card" role="listitem"><strong>Courses</strong><div>{{ metrics.courses }}</div></div>
-  <div class="card" role="listitem"><strong>Sessions</strong><div>{{ metrics.sessions }}</div></div>
-  <div class="card" role="listitem"><strong>Enrollments</strong><div>{{ metrics.enrollments }}</div></div>
-  <div class="card" role="listitem"><strong>Bookings</strong><div>{{ metrics.bookings }}</div></div>
-  <div class="card" role="listitem"><strong>Payments</strong><div>{{ metrics.payments }}</div></div>
+<div class="grid stats" role="list">
+  <div class="card stat" role="listitem"><div class="stat-label">Users</div><div class="stat-value">{{ metrics.users }}</div></div>
+  <div class="card stat" role="listitem"><div class="stat-label">Tutors</div><div class="stat-value">{{ metrics.tutors }}</div></div>
+  <div class="card stat" role="listitem"><div class="stat-label">Courses</div><div class="stat-value">{{ metrics.courses }}</div></div>
+  <div class="card stat" role="listitem"><div class="stat-label">Sessions</div><div class="stat-value">{{ metrics.sessions }}</div></div>
+  <div class="card stat" role="listitem"><div class="stat-label">Enrollments</div><div class="stat-value">{{ metrics.enrollments }}</div></div>
+  <div class="card stat" role="listitem"><div class="stat-label">Bookings</div><div class="stat-value">{{ metrics.bookings }}</div></div>
+  <div class="card stat" role="listitem"><div class="stat-label">Payments</div><div class="stat-value">{{ metrics.payments }}</div></div>
  </div>
-<h2>Manage</h2>
-<ul class="list">
-  {% for label, url in admin_links %}
-    <li><a href="{{ url }}">{{ label }}</a></li>
-  {% endfor %}
- </ul>
+<div class="grid" style="grid-template-columns: 2fr 1fr; gap:16px;">
+  <section class="card">
+    <h2>Pending approvals</h2>
+    <ul class="list">
+      {% for r in pending_requests %}
+        <li>
+          {{ r.get_request_type_display }} — {{ r.requested_by.username }}
+          {% if r.booking %} · {{ r.booking.session.course.title }} ({{ r.booking.session.start_time }}){% endif %}
+          · <a href="/admin/mmi_app/actionrequest/{{ r.id }}/change/">Review</a>
+        </li>
+      {% empty %}
+        <li>No pending items.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <aside class="card">
+    <h2>Quick actions</h2>
+    <ul class="list">
+      <li><a href="/admin/mmi_app/course/add/">Add course</a></li>
+      <li><a href="/admin/mmi_app/session/add/">Add session</a></li>
+      <li><a href="/admin/mmi_app/tutor/add/">Add tutor</a></li>
+      <li><a href="/admin/mmi_app/sitesetting/">Site settings</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap:16px; margin-top:16px;">
+  <section class="card">
+    <h2>Recent enrollments</h2>
+    <ul class="list">
+      {% for e in recent_enrollments %}
+        <li>{{ e.student.username }} → {{ e.course.title }} ({{ e.created_at }})</li>
+      {% empty %}<li>None.</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="card">
+    <h2>Recent bookings</h2>
+    <ul class="list">
+      {% for b in recent_bookings %}
+        <li>{{ b.student.username }} → {{ b.session.course.title }} ({{ b.session.start_time }})</li>
+      {% empty %}<li>None.</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="card">
+    <h2>Recent payments</h2>
+    <ul class="list">
+      {% for p in recent_payments %}
+        <li>{{ p.enrollment.student.username }} → {{ p.enrollment.course.title }} — {{ p.status }} (${% widthratio p.amount_cents 100 1 %})</li>
+      {% empty %}<li>None.</li>{% endfor %}
+    </ul>
+  </section>
+</div>
+
+<section style="margin-top:16px;">
+  <h2>Manage</h2>
+  <ul class="list">
+    {% for label, url in admin_links %}
+      <li><a href="{{ url }}">{{ label }}</a></li>
+    {% endfor %}
+    <li><a href="/admin/mmi_app/actionrequest/">Action requests</a></li>
+  </ul>
+</section>
 {% endblock %}
 
