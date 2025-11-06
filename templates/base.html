@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,13 +8,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/base.css" />
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/logo.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}" />
     {% block head_css %}{% endblock %}
 </head>
 <body>
 <header class="site-header">
     <div class="container header-inner">
-        <a class="brand" href="/">MMI</a>
+        <a class="brand" href="/">
+            <span>MMI</span>
+            <img src="{% static 'images/logo.jpg' %}" alt="MMI Logo" class="logo" />
+        </a>
         <nav class="nav">
             {% if user.is_authenticated and user.is_staff %}
                 <a href="/admin-dashboard/">Admin</a>
@@ -48,16 +54,40 @@
     </main>
 
 <footer class="site-footer">
-    <div class="container footer-inner">
-        <div class="footer-brand">MMI</div>
-        <nav class="footer-nav">
-            <a href="/privacy/">Privacy</a>
-            <a href="/terms/">Terms</a>
-            <a href="/contact/">Contact</a>
-        </nav>
-        <div class="footer-copy">© {% now "Y" %} MMI. All rights reserved.</div>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>MMI <img src="{% static 'images/logo.jpg' %}" alt="MMI Logo" class="footer-logo" /></h3>
+                <p>Master new skills with expert tutors. Enroll, book sessions, and access resources in one place.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/courses/">Courses</a></li>
+                    <li><a href="/tutors/">Tutors</a></li>
+                    <li><a href="/bookings/">Bookings</a></li>
+                    {% if user.is_authenticated %}<li><a href="/dashboard/">Dashboard</a></li>{% endif %}
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/contact/">Contact Us</a></li>
+                    <li><a href="/privacy/">Privacy Policy</a></li>
+                    <li><a href="/terms/">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p>Email: support@mmi-learning.com</p>
+                <p>We respond within 2 business days.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© {% now "Y" %} MMI Learning Platform. All rights reserved.</p>
+        </div>
     </div>
-    </footer>
+</footer>
 
 {% block body_js %}{% endblock %}
 </body>

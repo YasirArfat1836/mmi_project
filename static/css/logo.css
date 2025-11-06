@@ -1,0 +1,32 @@
+.brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.brand .logo {
+    height: 45px !important;
+    width: auto !important;
+    max-width: 160px !important;
+    object-fit: contain;
+    display: inline-block !important;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.footer-logo {
+    height: 28px !important;
+    width: auto !important;
+    max-width: 100px !important;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+.footer-col h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
